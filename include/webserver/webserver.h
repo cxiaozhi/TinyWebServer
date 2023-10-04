@@ -13,6 +13,7 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
 const int MAX_FD = 65536;           // 最大文件描述符
 const int MAX_EVENT_NUMBER = 65536; // 最大事件数
 const int TIMESLOT = 5;             // 最小超时单位
@@ -29,6 +30,15 @@ public:
     int actorModel;
     int pipeFd[2];
     int epollfd;
+    HttpConn* users;
+
+    ConnectionPool* connPool;
+    string user;
+    string password;
+    string databaseName;
+    int sqlNum;
+
+    threadPoll<HttpConn>* pool;
 
 public:
     WebServer(/* args */);

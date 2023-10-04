@@ -19,14 +19,14 @@ private:
 
     int m_MaxConn;  // 最大连接数
     int m_CurConn;  // 当前已使用的连接数
-    int m_FreeConn; //当前空闲的连接数
+    int m_FreeConn; // 当前空闲的连接数
 
     Locker lock;
     list<MYSQL*> connList; // 连接池
     Sem reserve;
 
 public:
-    string mUrl;          //主机地址
+    string mUrl;          // 主机地址
     string mPort;         // 数据库端口号
     string mUser;         // 登录数据库用户名
     string mPassWord;     // 登录数据库密码
@@ -43,4 +43,14 @@ public:
 
     void init(string url, string User, string PassWord, string DataBaseNmae,
               int Port, int MaxConn, int close_log);
+};
+
+class ConnectionRaii {
+private:
+    MYSQL* conRaii;
+    ConnectionPool* poolRaii;
+
+public:
+    ConnectionRaii(MYSQL** con, ConnectionPool* connPool);
+    ~ConnectionRaii();
 };
