@@ -25,7 +25,6 @@
 #include "sqlConnectionPool.h"
 
 class HttpConn {
-
 public:
     static const int FILE_NAME_LEN = 200;
     static const int READ_BUFFER_SIZE = 2048;
@@ -62,6 +61,8 @@ public:
         CLOSED_CONNECTTON
     };
     enum LINE_STATUS { LINE_OK, LINE_BAD, LINE_OPEN };
+    int timerFlag;
+    int improv;
 
 private:
     int sockFd;
@@ -100,13 +101,33 @@ private:
 public:
     HttpConn(/* args */);
     ~HttpConn();
-
-public:
+    sockaddr_in* getAddress();
+    void initMysqlResult(ConnectionPool* connPool);
     void init(int sockfd, const sockaddr_in& addr, char*, int, int, string user,
               string passwd, string sqlname);
     void closeConn(bool realClose = true);
     void process();
     void readOnce();
     bool write();
-    sockaddr_in* getAddress() {}
+
+private:
+    void init();
+    HTTP_CODE processRead();
+    bool processWrite(HTTP_CODE ret);
+    HTTP_CODE parseRequestLine(char* text);
+    HTTP_CODE parseHeaders(char* text);
+    HTTP_CODE parseContent(char* text);
+    HTTP_CODE doRequest();
+
+    char* getLine();
+    LINE_STATUS parseLine();
+    void unmap();
+    bool addResponse(const char* format, ...);
+    bool addContent(const char* content);
+    bool addStatusLine(int status, const char* title);
+    bool addHeaders(int contentLength);
+    bool addContentType();
+    bool addContentLength(int contentLength);
+    bool addLinger();
+    bool addBlankLine();
 };

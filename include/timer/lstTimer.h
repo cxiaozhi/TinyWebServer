@@ -69,7 +69,8 @@ public:
     ~Utils();
 
     void init(int timeslot);
-    void setNonBlocking(int fd); // 对文件描述符设置非阻塞
+    int setNonBlocking(int fd); // 对文件描述符设置非阻塞
+
     void
     addfd(int epollfd, int fd, bool oneShot,
           int trigMode); // 将内核事件表注册读事件 ET模式 选择开启epoll one shot
@@ -79,3 +80,5 @@ public:
     void timerHandler(); // 定时处理任务 重新定时以不断触发sigalrm 信号
     void showError(int connfd, const char* info);
 };
+
+void cbFunc(ClientData* userData);

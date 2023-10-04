@@ -38,7 +38,21 @@ public:
     string databaseName;
     int sqlNum;
 
-    threadPoll<HttpConn>* pool;
+    Threadpool<HttpConn>* pool;
+    int threadNum;
+
+    // 事件池
+    epoll_event events[MAX_EVENT_NUMBER];
+
+    int listenFd;
+    int optLinger;
+    int TrigMode;
+    int ListenTrigMode;
+    int ConnTrigMode;
+
+    // 定时器相关
+    ClientData* usersTimer;
+    Utils utils;
 
 public:
     WebServer(/* args */);
@@ -47,7 +61,7 @@ public:
     void init(int port, string user, string password, string dataBaseName,
               int logWriteData, int optLinger, int trigMode, int sqlNum,
               int threadNum, int closeLog, int actorModel);
-    void threadPoll();
+    void threadPool();
     void sqlPool();
     void logWrite();
     void trigMode();
