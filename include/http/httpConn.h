@@ -107,7 +107,7 @@ public:
               string passwd, string sqlname);
     void closeConn(bool realClose = true);
     void process();
-    void readOnce();
+    bool readOnce();
     bool write();
 
 private:

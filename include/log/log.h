@@ -7,35 +7,10 @@
 #include <string>
 using namespace std;
 
-#define LOG_DEBUG(format, ...)                                                 \
-    if (0 == closeLog) {                                                       \
-        Log::get_instance()->writeLog(0, format, ##__VA_ARGS__);               \
-        Log::get_instance()->flush();                                          \
-    }
-
-#define LOG_INFO(format, ...)                                                  \
-    if (0 == closeLog) {                                                       \
-        Log::get_instance()->writeLog(1, format, ##__VA_ARGS__);               \
-        Log::get_instance()->flush();                                          \
-    }
-
-#define LOG_WARN(format, ...)                                                  \
-    if (0 == closeLog) {                                                       \
-        Log::get_instance()->writeLog(2, format, ##__VA_ARGS__);               \
-        Log::get_instance()->flush();                                          \
-    }
-
-#define LOG_ERROR(format, ...)                                                 \
-    if (0 == closeLog) {                                                       \
-        Log::get_instance()->writeLog(3, format, ##__VA_ARGS__);               \
-        Log::get_instance()->flush();                                          \
-    }
-
 class Log {
 private:
-    Log(/* args */);
+    Log();
     virtual ~Log();
-
     char dir_name[128];     // 路径名
     char log_name[128];     // logn文件名
     int splitLines;         // 日志最大行数
@@ -74,3 +49,27 @@ public:
     void writeLog(int level, const char* format, ...);
     void flush(void);
 };
+
+#define LOG_DEBUG(format, ...)                                                 \
+    if (0 == WebServer::closeLogData) {                                        \
+        Log::get_instance()->writeLog(0, format, ##__VA_ARGS__);               \
+        Log::get_instance()->flush();                                          \
+    }
+
+#define LOG_INFO(format, ...)                                                  \
+    if (0 == WebServer::closeLogData) {                                        \
+        Log::get_instance()->writeLog(1, format, ##__VA_ARGS__);               \
+        Log::get_instance()->flush();                                          \
+    }
+
+#define LOG_WARN(format, ...)                                                  \
+    if (0 == WebServer::closeLogData) {                                        \
+        Log::get_instance()->writeLog(2, format, ##__VA_ARGS__);               \
+        Log::get_instance()->flush();                                          \
+    }
+
+#define LOG_ERROR(format, ...)                                                 \
+    if (0 == WebServer::closeLogData) {                                        \
+        Log::get_instance()->writeLog(3, format, ##__VA_ARGS__);               \
+        Log::get_instance()->flush();                                          \
+    }
