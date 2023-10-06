@@ -1,3 +1,4 @@
+
 #include "../../include/timer/lstTimer.h"
 
 #include "../../include/http/httpConn.h"
@@ -189,6 +190,7 @@ void Utils::showError(int connfd, const char* info) {
 int* Utils::pipeFd = 0;
 int Utils::epollFd = 0;
 
+class Utils;
 void cbFunc(ClientData* userData) {
     epoll_ctl(Utils::epollFd, EPOLL_CTL_DEL, userData->sockfd, 0);
     assert(userData);

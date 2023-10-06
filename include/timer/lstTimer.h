@@ -41,7 +41,6 @@ public:
 
 public:
     UtilTimer() : prev(NULL), next(NULL){};
-    ~UtilTimer();
 };
 
 class SortTimerLst {
@@ -70,9 +69,6 @@ public:
     int TIMESLOT;
 
 public:
-    Utils();
-    ~Utils();
-
     void init(int timeslot);
     int setNonBlocking(int fd);  // 对文件描述符设置非阻塞
 

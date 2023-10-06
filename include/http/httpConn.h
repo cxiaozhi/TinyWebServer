@@ -1,4 +1,5 @@
 #pragma once
+
 #include <arpa/inet.h>
 #include <assert.h>
 #include <errno.h>
@@ -68,7 +69,7 @@ public:
 
 private:
     int sockFd;
-    sockaddr_in address;
+    sockaddr_in sockAddress;
     char readBuf[HttpConn::READ_BUFFER_SIZE];
     long readIdx;
     long checkedIdx;
@@ -100,9 +101,11 @@ private:
     char sqlPasswd[100];
     char sqlName[100];
 
+    // public:
+    //     inline HttpConn();
+    //     inline ~HttpConn();
+
 public:
-    HttpConn(/* args */);
-    ~HttpConn();
     sockaddr_in* getAddress();
     void initMysqlResult(ConnectionPool* connPool);
     void init(int sockfd, const sockaddr_in& addr, char*, int, int, string user,

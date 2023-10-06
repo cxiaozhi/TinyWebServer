@@ -3,8 +3,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    string user = "root";
-    string passwd = "root";
+    std::cout << "初始化开始" << std::endl;
+    string user = "ccz";
+    string passwd = "ccz";
     string dataBaseName = "test";
 
     Config config;  // 命令行解析

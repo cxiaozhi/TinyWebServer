@@ -92,6 +92,9 @@ void modfd(int epollfd, int fd, int ev, int trigmode) {
 int HttpConn::userCount = 0;
 int HttpConn::epollfd = -1;
 
+sockaddr_in* HttpConn::getAddress() {
+    return &sockAddress;
+};
 // 关闭连接 关闭一个连接客户总量减一
 void HttpConn::closeConn(bool realClose) {
     if (realClose && (sockFd != -1)) {
@@ -107,7 +110,7 @@ void HttpConn::init(int sockfd, const sockaddr_in& addr, char* root,
                     int trigmode, int closeLog, string user, string passwd,
                     string sqlName) {
     HttpConn::sockFd = sockfd;
-    HttpConn::address = addr;
+    HttpConn::sockAddress = addr;
     addfd(HttpConn::epollfd, sockfd, true, HttpConn::TrigMode);
     HttpConn::userCount++;
 
@@ -215,7 +218,7 @@ bool HttpConn::readOnce() {
 // 解析http请求行 获得请求方法 目标URL 以及http版本号
 HttpConn::HTTP_CODE HttpConn::parseRequestLine(char* text) {
     HttpConn::url = strpbrk(text, " \t");
-
+    printf(HttpConn::url);
     if (!HttpConn::url) {
         return BAD_REQUEST;
     }
@@ -293,6 +296,10 @@ HttpConn::HTTP_CODE HttpConn::parseContent(char* text) {
         return GET_REQUEST;
     }
     return NO_REQUEST;
+}
+
+char* HttpConn::getLine() {
+    return readBuf + startLine;
 }
 
 HttpConn::HTTP_CODE HttpConn::processRead() {

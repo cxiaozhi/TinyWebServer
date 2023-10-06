@@ -1,6 +1,5 @@
 #include "../../include/webserver/webserver.h"
 
-#include "../../include/http/httpConn.h"
 WebServer::WebServer() {
     // HttpConn 类对象
     WebServer::users = new HttpConn[MAX_FD];
@@ -9,8 +8,7 @@ WebServer::WebServer() {
 
     // root文件夹路径
     char root[6] = "/root";
-    WebServer::root =
-        (char*)malloc(strlen(serverPath) + strlen(WebServer::root) + 1);
+    WebServer::root = (char*)malloc(strlen(serverPath) + strlen(root) + 1);
 
     strcpy(WebServer::root, serverPath);
     strcpy(WebServer::root, root);

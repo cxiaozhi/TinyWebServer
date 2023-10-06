@@ -57,7 +57,7 @@ public:
     Utils utils;
 
 public:
-    WebServer(/* args */);
+    WebServer();
     ~WebServer();
 
     void init(int port, string user, string password, string dataBaseName,
