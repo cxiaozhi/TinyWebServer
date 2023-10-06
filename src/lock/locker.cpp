@@ -1,9 +1,11 @@
 #pragma once
 
-#include "locker.h"
-#include <exception>
+#include "../../include/lock/locker.h"
+
 #include <pthread.h>
 #include <semaphore.h>
+
+#include <exception>
 
 Sem::Sem() {
     if (sem_init(&(Sem::m_sem), 0, 0) != 0) {

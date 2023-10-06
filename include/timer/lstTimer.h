@@ -1,4 +1,5 @@
-#include "log.h"
+#pragma once
+
 #include <arpa/inet.h>
 #include <assert.h>
 #include <errno.h>
@@ -20,6 +21,16 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "../log/log.h"
+
+class UtilTimer;
+
+struct ClientData {
+    sockaddr_in address;
+    int sockfd;
+    UtilTimer* timer;
+};
+
 class UtilTimer {
 public:
     UtilTimer* prev;
@@ -31,12 +42,6 @@ public:
 public:
     UtilTimer() : prev(NULL), next(NULL){};
     ~UtilTimer();
-};
-
-struct ClientData {
-    sockaddr_in address;
-    int sockfd;
-    UtilTimer* timer;
 };
 
 class SortTimerLst {
@@ -69,15 +74,15 @@ public:
     ~Utils();
 
     void init(int timeslot);
-    int setNonBlocking(int fd); // 对文件描述符设置非阻塞
+    int setNonBlocking(int fd);  // 对文件描述符设置非阻塞
 
-    void
-    addfd(int epollfd, int fd, bool oneShot,
-          int trigMode); // 将内核事件表注册读事件 ET模式 选择开启epoll one shot
-    static void sigHandler(int sig); // 信号处理函数
+    void addfd(
+        int epollfd, int fd, bool oneShot,
+        int trigMode);  // 将内核事件表注册读事件 ET模式 选择开启epoll one shot
+    static void sigHandler(int sig);  // 信号处理函数
     void addsig(int sig, void(handler)(int),
-                bool restart = true); // 设置信号函数
-    void timerHandler(); // 定时处理任务 重新定时以不断触发sigalrm 信号
+                bool restart = true);  // 设置信号函数
+    void timerHandler();  // 定时处理任务 重新定时以不断触发sigalrm 信号
     void showError(int connfd, const char* info);
 };
 

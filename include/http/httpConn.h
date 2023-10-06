@@ -1,8 +1,8 @@
+#pragma once
 #include <arpa/inet.h>
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <map>
 #include <netinet/in.h>
 #include <pthread.h>
 #include <signal.h>
@@ -19,10 +19,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "locker.h"
-#include "log.h"
-#include "lstTimer.h"
-#include "sqlConnectionPool.h"
+#include <map>
+
+#include "../CGIMysql/sqlConnectionPool.h"
+#include "../lock/locker.h"
+#include "../log/log.h"
+#include "../timer/lstTimer.h"
 
 class HttpConn {
 public:
@@ -32,7 +34,7 @@ public:
     static int epollfd;
     static int userCount;
     MYSQL* mysql;
-    int rwState; // 读为0 写为1
+    int rwState;  // 读为0 写为1
 
     enum METHOD {
         GET,
@@ -85,14 +87,14 @@ private:
     struct stat fileStat;
     struct iovec iv[2];
     int ivCount;
-    int cgi;          // 是否启用的POST
-    char* headString; // 存储请求头数据
+    int cgi;           // 是否启用的POST
+    char* headString;  // 存储请求头数据
     int bytesToSend;
     int bytesHaveSend;
     char* docRoot;
     map<string, string> users;
     int TrigMode;
-    int closeLog;
+    int closeLogData;
 
     char sqlUser[100];
     char sqlPasswd[100];

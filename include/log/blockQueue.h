@@ -1,14 +1,17 @@
 #pragma once
 
-#include "locker.h"
-#include <iostream>
 #include <pthread.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
+#include <iostream>
+
+#include "../lock/locker.h"
+
 using namespace std;
 
-template <class T> class BlockQueue {
+template <class T>
+class BlockQueue {
 private:
     Locker m_mutex;
     Cond m_cond;

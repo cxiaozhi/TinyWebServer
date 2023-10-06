@@ -1,4 +1,5 @@
-#include "log.h"
+#include "../../include/log/log.h"
+
 #include <pthread.h>
 #include <stdarg.h>
 #include <string.h>
@@ -74,21 +75,21 @@ void Log::writeLog(int level, const char* format, ...) {
     char str[16] = {0};
 
     switch (level) {
-    case 0:
-        strcpy(str, "[debug]:");
-        break;
-    case 1:
-        strcpy(str, "[info]:");
-        break;
-    case 2:
-        strcpy(str, "[warn]:");
-        break;
-    case 3:
-        strcpy(str, "[error]:");
-        break;
-    default:
-        strcpy(str, "[info]:");
-        break;
+        case 0:
+            strcpy(str, "[debug]:");
+            break;
+        case 1:
+            strcpy(str, "[info]:");
+            break;
+        case 2:
+            strcpy(str, "[warn]:");
+            break;
+        case 3:
+            strcpy(str, "[error]:");
+            break;
+        default:
+            strcpy(str, "[info]:");
+            break;
     }
 
     // 写一个log 对m_count++ m_split_lines 最大行数

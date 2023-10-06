@@ -1,7 +1,7 @@
-#include "webserver/webserver.h"
+#include "../../include/webserver/webserver.h"
 
+#include "../../include/http/httpConn.h"
 WebServer::WebServer() {
-
     // HttpConn 类对象
     WebServer::users = new HttpConn[MAX_FD];
     char serverPath[200];
@@ -33,7 +33,6 @@ void WebServer::init(int port, string user, string password,
                      string dataBaseName, int logWriteData, int optLinger,
                      int trigMode, int sqlNum, int threadNum, int closeLog,
                      int actorModel) {
-
     WebServer::port = port;
     WebServer::user = user;
     WebServer::password = password;
@@ -228,13 +227,13 @@ bool WebServer::dealWithSignal(bool& timeout, bool& stopServer) {
     } else {
         for (int i = 0; i < ret; i++) {
             switch (signals[i]) {
-            case SIGALRM:
-                timeout = true;
-                break;
+                case SIGALRM:
+                    timeout = true;
+                    break;
 
-            case SIGTERM:
-                stopServer = true;
-                break;
+                case SIGTERM:
+                    stopServer = true;
+                    break;
             }
         }
     }
@@ -328,8 +327,7 @@ void WebServer::eventLoop() {
             } else if ((sockfd == WebServer::pipeFd[0]) &&
                        (events[i].events & EPOLLIN)) {
                 bool flag = dealWithSignal(timeout, stopServer);
-                if (false == flag)
-                    LOG_ERROR("%s", "处理客户数据失败");
+                if (false == flag) LOG_ERROR("%s", "处理客户数据失败");
             } else if (events[i].events & EPOLLIN) {
                 dealWithRead(sockfd);
             } else if (events[i].events & EPOLLOUT) {
