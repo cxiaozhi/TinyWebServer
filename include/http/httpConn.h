@@ -27,6 +27,7 @@
 #include "../log/log.h"
 #include "../timer/lstTimer.h"
 
+// 这里有两个状态机
 class HttpConn {
 public:
     static const int FILE_NAME_LEN = 200;

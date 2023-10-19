@@ -44,6 +44,7 @@ void WebServer::init(int port, string user, string password,
     WebServer::actorModel = actorModel;
 }
 
+// 触发模式
 void WebServer::trigMode() {
     if (0 == WebServer::TrigMode) {
         WebServer::ListenTrigMode = 0;
@@ -123,11 +124,16 @@ void WebServer::eventListen() {
     epoll_event event[MAX_EVENT_NUMBER];
 
     WebServer::epollfd = epoll_create(5);
-
     assert(WebServer::epollfd != -1);
 
+    utils.addfd(epollfd, listenFd, false, ListenTrigMode);
+    HttpConn::epollfd = epollfd;
+
+    ret = socketpair(PF_UNIX, SOCK_STREAM, 0, pipeFd);
+    assert(ret != -1);
     utils.setNonBlocking(WebServer::pipeFd[1]);
     utils.addfd(WebServer::epollfd, WebServer::pipeFd[0], false, 0);
+
     utils.addsig(SIGPIPE, SIG_IGN);
     utils.addsig(SIGALRM, utils.sigHandler, false);
     utils.addsig(SIGPIPE, utils.sigHandler, false);
@@ -306,6 +312,7 @@ void WebServer::eventLoop() {
     while (!stopServer) {
         int number = epoll_wait(WebServer::epollfd, WebServer::events,
                                 MAX_EVENT_NUMBER, -1);
+
         if (number < 0 && errno != EINTR) {
             LOG_ERROR("%s", "池化失败");
             break;
@@ -333,6 +340,7 @@ void WebServer::eventLoop() {
             }
         }
         if (timeout) {
+            printf("执行了1\n");
             utils.timerHandler();
             LOG_INFO("%s", "心跳");
             timeout = false;

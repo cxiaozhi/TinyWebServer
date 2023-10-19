@@ -24,7 +24,7 @@ private:
     BlockQueue<string>* logQueue;  // 阻塞队列
     bool isAsync;                  // 是否同步标志位
     Locker mutexLock;              // 互斥锁
-    int closeLog;                  // 关闭日志
+    int closeLogData;              // 关闭日志
 
 private:
     void* asyncWriteLog() {

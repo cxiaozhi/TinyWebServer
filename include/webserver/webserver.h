@@ -15,16 +15,17 @@
 #include "../http/httpConn.h"
 #include "../threadpool/threadpool.h"
 #include "../timer/lstTimer.h"
+#define MAX_NUM 65536
 
-const int MAX_FD = 65536;            // 最大文件描述符
-const int MAX_EVENT_NUMBER = 65536;  // 最大事件数
-const int TIMESLOT = 5;              // 最小超时单位
+const int MAX_FD = MAX_NUM;            // 最大文件描述符
+const int MAX_EVENT_NUMBER = MAX_NUM;  // 最大事件数
+const int TIMESLOT = 5;                // 最小超时单位
 
 class WebServer {
 private:
     /* data */
 public:
-    // 基础
+    // 基础配置
     int port;
     char* root;
     int logWriteData;

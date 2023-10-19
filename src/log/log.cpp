@@ -30,11 +30,10 @@ bool Log::init(const char* fileName, int closeLog, int logBufSize,
         pthread_create(&tid, NULL, flush_log_thread, NULL);
     }
 
-    Log::closeLog = closeLog;
+    Log::closeLogData = closeLog;
     Log::logBufSize = logBufSize;
     Log::buf = new char[logBufSize];
     memset(Log::buf, '\0', Log::logBufSize);
-
     Log::splitLines = splitLines;
 
     time_t _time = time(NULL);
@@ -126,7 +125,8 @@ void Log::writeLog(int level, const char* format, ...) {
 
     // 写入的具体时间内容格式
     int n = snprintf(Log::buf, 48, "%d-%02d-%02d %02d:%02d:%02d.%06ld %s",
-                     mytime.tm_year + 1900, mytime.tm_min, mytime.tm_sec,
+                     mytime.tm_year + 1900, mytime.tm_mon + 1, mytime.tm_mday,
+                     mytime.tm_hour, mytime.tm_min, mytime.tm_sec,
                      nowTime.tv_usec, str);
     int m = vsnprintf(Log::buf + n, Log::logBufSize - n - 1, format, valst);
     Log::buf[n + m] = '\n';
