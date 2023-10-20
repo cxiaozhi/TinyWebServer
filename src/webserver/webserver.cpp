@@ -9,9 +9,8 @@ WebServer::WebServer() {
     // root文件夹路径
     char root[6] = "/root";
     WebServer::root = (char*)malloc(strlen(serverPath) + strlen(root) + 1);
-
     strcpy(WebServer::root, serverPath);
-    strcpy(WebServer::root, root);
+    strcat(WebServer::root, root);
 
     // 定时器
     WebServer::usersTimer = new ClientData[MAX_FD];
@@ -248,6 +247,7 @@ void WebServer::dealWithRead(int sockfd) {
     UtilTimer* timer = usersTimer[sockfd].timer;
     if (1 == WebServer::actorModel) {
         if (timer) {
+            printf("写数据4");
             WebServer::adjustTimer(timer);
         }
         WebServer::pool->append(WebServer::users + sockfd, 0);
@@ -268,6 +268,7 @@ void WebServer::dealWithRead(int sockfd) {
                 inet_ntoa(WebServer::users[sockfd].getAddress()->sin_addr));
             WebServer::pool->appendP(WebServer::users + sockfd);
             if (timer) {
+                printf("写数据3");
                 adjustTimer(timer);
             }
         } else {
@@ -280,6 +281,7 @@ void WebServer::dealWithWrite(int sockfd) {
     UtilTimer* timer = WebServer::usersTimer[sockfd].timer;
     if (1 == WebServer::actorModel) {
         if (timer) {
+            printf("写数据1");
             WebServer::adjustTimer(timer);
         }
         WebServer::pool->append(WebServer::users + sockfd, 1);
@@ -298,6 +300,7 @@ void WebServer::dealWithWrite(int sockfd) {
             LOG_INFO("发送数据到客户端(%s)",
                      inet_ntoa(users[sockfd].getAddress()->sin_addr));
             if (timer) {
+                printf("写数据2");
                 adjustTimer(timer);
             }
         } else {
@@ -319,7 +322,6 @@ void WebServer::eventLoop() {
         }
         for (int i = 0; i < number; i++) {
             int sockfd = events[i].data.fd;
-
             // 处理新到的客户连接
             if (sockfd == WebServer::listenFd) {
                 bool flag = dealClenetData();
@@ -332,15 +334,17 @@ void WebServer::eventLoop() {
             } else if ((sockfd == WebServer::pipeFd[0]) &&
                        (events[i].events & EPOLLIN)) {
                 bool flag = dealWithSignal(timeout, stopServer);
+                printf("写数据2");
                 if (false == flag) LOG_ERROR("%s", "处理客户数据失败");
             } else if (events[i].events & EPOLLIN) {
+                printf("写数据2");
                 dealWithRead(sockfd);
             } else if (events[i].events & EPOLLOUT) {
+                printf("写数据2");
                 dealWithWrite(sockfd);
             }
         }
         if (timeout) {
-            printf("执行了1\n");
             utils.timerHandler();
             LOG_INFO("%s", "心跳");
             timeout = false;
